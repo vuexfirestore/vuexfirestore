@@ -1,4 +1,9 @@
-# VuexFire [![Build Status](https://img.shields.io/circleci/project/github/posva/vuexfire/master.svg)](https://circleci.com/gh/posva/vuexfire) [![npm package](https://img.shields.io/npm/v/vuexfire.svg)](https://www.npmjs.com/package/vuexfire) [![coverage](https://img.shields.io/codecov/c/github/posva/vuexfire/master.svg)](https://codecov.io/github/posva/vuexfire) ![size](http://img.badgesize.io/posva/vuexfire/master/dist/vuexfire.min.js.svg?compression=gzip)
+# VuexFirestore
+> This is a fork from [Vuexfire](https://github.com/posva/vuexfire) to add function of loading firestore data by page.
+
+> The master branch of this repo is NOT for firestore and is NOT the working branch of this fork
+ 
+> This fork is on branch [vuexfirestore](https://github.com/vuexfirestore/vuexfirestore/tree/vuexfirestore)
 
 > SSR ready Firebase binding for [Vuex](https://github.com/vuejs/vuex)
 
@@ -9,16 +14,11 @@ If you need an older version check the `v1` branch: `npm i -D vuexfire@v1`
 
 ## Installation
 
-1. Using a CDN:
-
-``` html
-<script src="https://unpkg.com/vuexfire"></script>
-```
 
 2. In module environments, e.g CommonJS:
 
 ``` bash
-npm install vue firebase vuexfire --save
+npm install vue firebase vuexfirestore --save
 ```
 
 ## Usage
@@ -27,7 +27,7 @@ Add the mutations to your root Store and make sure to define the property you
 want to bind in the state first:
 
 ``` js
-import { firebaseMutations } from 'vuexfire'
+import { firebaseMutations } from 'vuexfirestore'
 const store = new Vuex.Store({
   state: {
     todos: [], // Will be bound as an array
@@ -60,7 +60,7 @@ takes the actual action and enhances it with two additional parameters in the
 context, `bindFirebaseRef` and `unbindFirebaseRef`:
 
 ```js
-import { firebaseAction } from 'vuexfire'
+import { firebaseAction } from 'vuexfirestore'
 
 const setTodosRef = firebaseAction(({ bindFirebaseRef, unbindFirebaseRef }, { ref }) => {
   // binding will automatically unbind any previously bound ref so you
@@ -81,6 +81,17 @@ const Component = {
     this.$store.dispatch('setTodosRef', { ref: db.ref('todos') })
   }
 }
+```
+
+To use pagination function, user two methods: bindMultipageRef, unbindMultipageRef, fetchNextMultipageRef in the same way as the bindFirebaseRef function
+```js
+import { firebaseAction } from 'vuexfirestore'
+
+const setTodosRef = firebaseAction(({ bindMultipageRef, unbindMultipageRef }, { ref }) => {
+  bindMultipageRef('todos', ref)
+  unbindMultipageRef('user')
+  fetchNextMultipageRef('todos')
+})
 ```
 
 ## Browser support
